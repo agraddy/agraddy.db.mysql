@@ -10,13 +10,16 @@
     "test": "node ./test"
   },
   "repository": {
-	  "type": "git",
-	  "url": "git://github.com/agraddy/agraddy.db.mysql.git"
+    "type": "git",
+    "url": "git://github.com/agraddy/agraddy.db.mysql.git"
   },
   "bugs": {
-	  "url": "https://github.com/agraddy/agraddy.db.mysql/issues"
+    "url": "https://github.com/agraddy/agraddy.db.mysql/issues"
   },
   "devDependencies": {
-	  "agraddy.test.tap": "^0.2.0"
+    "agraddy.test.tap": "^0.2.0"
+  },
+  "dependencies": {
+    "mysql": "^2.12.0"
   }
 }
