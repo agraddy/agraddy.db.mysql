@@ -1,0 +1,10 @@
+people
++ id i nn ai pk
++ first_name s
++ last_name s
++ age i
++ deleted b 0
+
+=
+
+!people
