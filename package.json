@@ -17,7 +17,7 @@
     "url": "https://github.com/agraddy/agraddy.db.mysql/issues"
   },
   "devDependencies": {
-    "agraddy.test.tap": "^0.2.0"
+    "agraddy.test.tap": "^0.3.0"
   },
   "dependencies": {
     "agraddy.async.each": "^0.4.0",

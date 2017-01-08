@@ -4,24 +4,46 @@ var tap = require('agraddy.test.tap')(__filename);
 
 var mod = require('../');
 
-// Truncate is used by setup
-mod.setup({people: [{first_name: 'John', last_name: 'Smith', age: 11},
+var setup = {people: [{first_name: 'John', last_name: 'Smith', age: 11},
 	{first_name: 'Jane', last_name: 'Doe', age: 22},
 	{first_name: 'John', last_name: 'Doe', age: 33}
-]}, compareObjectPass) ;
+]};
+
+var full = {people: [
+	{id: 1, first_name: 'John', last_name: 'Smith', age: 11, deleted: 0},
+	{id: 2, first_name: 'Jane', last_name: 'Doe', age: 22, deleted: 0},
+	{id: 3, first_name: 'John', last_name: 'Doe', age: 33, deleted: 0}
+]};
+
+var fail = {
+	people: [
+	{first_name: 'John', last_name: 'Smith', age: 11}
+	]
+};
+
+// Truncate is used by setup
+mod.setup(setup, compareObjectPass) ;
 
 function compareObjectPass() {
-		mod.compare({
-			people: [
-				{first_name: 'John', last_name: 'Smith', age: 11},
-				{first_name: 'Jane', last_name: 'Doe', age: 22},
-				{first_name: 'John', last_name: 'Doe', age: 33}
-			]
-		}, function(err, result) {
+		mod.compare(setup, function(err, result, actual, expected) {
+			tap.assert.deepEqual(actual, full, 'Actual should match what is in the database.');
+			tap.assert.deepEqual(expected, setup, 'Expected should match what was passed into compare().');
+			tap.assert.notDeepEqual(actual, expected, 'Actual and expected will never match unless expected lists every field.');
 			tap.assert(result, 'Compare should pass when it matches.');
 
-			selectAll();
+			compareObjectFail();
 		});
+}
+
+function compareObjectFail() {
+	mod.compare(fail, function(err, result, actual, expected) {
+		tap.assert.deepEqual(actual, full, 'Actual should match what is in the database.');
+		tap.assert.deepEqual(expected, fail, 'Expected should match what was passed into compare().');
+		tap.assert.notDeepEqual(actual, expected, 'Actual and expected will never match unless expected lists every field.');
+		tap.assert(!result, 'Compare should fail when it does not match.');
+
+		selectAll();
+	});
 }
 
 
@@ -65,21 +87,9 @@ function insertQuery() {
 			tap.assert.equal(rows[0].last_name, 'Roberts', 'Insert should work.');
 			tap.assert.equal(rows[0].age, 44, 'Insert should work.');
 
-			compareObjectFail();
-		});
-	});
-}
-
-function compareObjectFail() {
-		mod.compare({
-			people: [
-				{first_name: 'John', last_name: 'Smith', age: 11}
-			]
-		}, function(err, result) {
-			tap.assert(!result, 'Compare should fail when it does not match.');
-
 			setupCompareFilesPass();
 		});
+	});
 }
 
 function setupCompareFilesPass() {
